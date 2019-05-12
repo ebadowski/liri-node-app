@@ -1,4 +1,5 @@
 require("dotenv").config();
+var fs = require("fs");
 var axios = require("axios");
 var moment = require("moment");
 var keys = require("./keys.js");
@@ -9,11 +10,11 @@ let arr = process.argv;
 arr.splice(0, 2);
 let operator = arr[0];
 arr.splice(0, 1);
-let str = arr.join(" ")
+let text = arr.join(" ")
 
-decide(operator);
+decide(operator, text);
 
-function decide(oper) {
+function decide(oper, str) {
     switch (oper) {
         case 'concert-this':
             concert(str)
@@ -25,7 +26,7 @@ function decide(oper) {
             movie(str)
             break;
         case 'do-what-it-says':
-            external(str)
+            external()
             break;
         default:
             console.log('Not a valid query');
@@ -70,8 +71,13 @@ function movie(str) {
             console.log("* " + data.data.Actors); //Actors
         });
 }
-function external(str) {
-    //get string from txt file
-    //let text = 
-    //decide(text)
+function external() {
+    fs.readFile("random.txt", "utf8", function (error, data) {
+        if (error) throw error;
+        console.log(data);
+        var dataArr = data.split(",");
+        dataArr[1] = dataArr[1].replace(/"/g, '');
+        console.log(dataArr);
+        decide(dataArr[0], dataArr[1]);
+    });
 }
