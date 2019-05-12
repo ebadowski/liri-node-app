@@ -1,21 +1,17 @@
 require("dotenv").config();
-// require("node-spotify-api");
 var axios = require("axios");
 var moment = require("moment");
 var keys = require("./keys.js");
-//var spotify = new Spotify(keys.spotify);
+var Spotify = require('node-spotify-api');
+var spotify = new Spotify(keys.spotify);
+
 let arr = process.argv;
 arr.splice(0, 2);
 let operator = arr[0];
 arr.splice(0, 1);
 let str = arr.join(" ")
 
-
 decide(operator);
-
-
-
-
 
 function decide(oper) {
     switch (oper) {
@@ -41,9 +37,6 @@ function concert(str) {
     axios
         .get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp")
         .then(function (response) {
-            // If the axios was successful...
-            // Then log the body from the site!
-            //;console.log(response.data);
             console.log("Venue: " + response.data[0].venue.name);
             console.log("Location: " + response.data[0].venue.city + ", " + response.data[0].venue.region);
             let date = moment(response.data[0].datetime).format('L');
@@ -51,7 +44,16 @@ function concert(str) {
         });
 }
 function song(str) {
+    if (!str){str = 'Cocaine Jesus'}
 
+    spotify.search({ type: 'track', query: str },  (error, data) => {
+        if (error) throw error;
+
+        console.log("Artist: " + data.tracks.items[0].artists[0].name);
+        console.log("Song: " + data.tracks.items[0].name);
+        console.log("Preview Link: " + data.tracks.items[0].preview_url);
+        console.log("Album: " + data.tracks.items[0].album.name);
+    });
 }
 function movie(str) {
 
