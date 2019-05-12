@@ -44,9 +44,9 @@ function concert(str) {
         });
 }
 function song(str) {
-    if (!str){str = 'Cocaine Jesus'}
+    if (!str) { str = 'Cocaine Jesus' }
 
-    spotify.search({ type: 'track', query: str },  (error, data) => {
+    spotify.search({ type: 'track', query: str }, (error, data) => {
         if (error) throw error;
 
         console.log("Artist: " + data.tracks.items[0].artists[0].name);
@@ -56,7 +56,19 @@ function song(str) {
     });
 }
 function movie(str) {
-
+    let title = str.replace(" ", "_");
+    axios
+        .get("https://www.omdbapi.com/?t=" + title + "&y=&plot=short&apikey=trilogy")
+        .then(function (data) {
+            console.log("* " + data.data.Title); //Title
+            console.log("* " + data.data.Year); //Release Year
+            console.log("* " + data.data.Ratings[0].Value); //IMDB Rating
+            console.log("* " + data.data.Ratings[1].Value); //Rot Tom Rating
+            console.log("* " + data.data.Country); //Country Produced
+            console.log("* " + data.data.Language); //Language
+            console.log("* " + data.data.Plot); //Plot
+            console.log("* " + data.data.Actors); //Actors
+        });
 }
 function external(str) {
     //get string from txt file
